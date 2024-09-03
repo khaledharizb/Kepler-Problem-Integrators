@@ -118,13 +118,23 @@ end
 
 
 
-# Runge Kutta data
-
+#= 
+Runge Kutta data
+RK = 1 Gauss method of odrer 4
+RK = 2 Symplectic RK method  of odrer 3 
+RK = 3 Symplectic RK method  of odrer 4 
+=#
 function RKdata(RK)
-if RK==1 # Gauss method of odrer 4
+if RK==1 
  A = [0.25 0.25-√3/6 ; 0.25+√3/6 0.25]
  b = [0.5, 0.5];
-elseif RK==2 # Symplectic RK method  of odrer 4 
+        
+elseif RK==2 
+a = (2+ 2^(1/3) + 1/2^(1/3)) / 3;
+A = [a/2 0 0; a a/2 0; a a 1/2 - a];
+b = [a, a , 1-2*a];    
+        
+elseif RK==3 
 a = (2+ 2^(1/2) + 1/2^(1/3)) / 3;
 A = [a/2 0 0; a 1/2-a 0; a 1-2*a a/2];
 b = [a, 1-2*a, a];
