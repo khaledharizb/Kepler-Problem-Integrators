@@ -77,6 +77,37 @@ end
     
 end
 
+function  TrapRule(f::Function,u₀,h,N) # Trapezoidal rule (almost symplectic)
+
+u = zeros(length(u₀),N+1)
+u[:,1]  =   u₀;
+        
+for i in 1:size(u,2)-1; 
+ g(z) = u[:,i] + h/2 * (f(u[:,i] + z ));
+   K0 = u[:,i]
+    z = FixIter(g,K0,1e-12);
+ u[:,i+1] = z;
+
+end
+    return u; 
+    
+end
+
+
+function  Runge(f::Function,u₀,h,N) # Runge method, also known as explicit  midpoint rule (order 2)
+
+u = zeros(length(u₀),N+1)
+u[:,1]  =   u₀;
+        
+for i in 1:size(u,2)-1; 
+   z =  u[:,i] + h / 2 * f(u[:,i])    
+  u[:,i+1] = u[:,i] + h * f(z) ;
+end
+    return u; 
+    
+end
+
+
 
 function  StormerVerlet(fT,fV,q₀,p₀,h,N) # Stormer Verlet methods (symplectic)
 q = zeros(length(q₀),N+1)
@@ -130,12 +161,12 @@ if RK==1
  b = [0.5, 0.5];
         
 elseif RK==2 
-a = (2+ 2^(1/3) + 1/2^(1/3)) / 3;
+ a = (2+ 2^(1/3) + 1/2^(1/3)) / 3;
 A = [a/2 0 0; a a/2 0; a a 1/2 - a];
 b = [a, a , 1-2*a];    
         
 elseif RK==3 
-a = (2+ 2^(1/2) + 1/2^(1/3)) / 3;
+ a = (2+ 2^(1/3) + 1/2^(1/3)) / 3;
 A = [a/2 0 0; a 1/2-a 0; a 1-2*a a/2];
 b = [a, 1-2*a, a];
 end
